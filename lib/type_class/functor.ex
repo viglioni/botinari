@@ -56,4 +56,8 @@ defmodule TypeClass.Functor do
   @spec map_left(Either.t(), fun()) :: Either.t()
   def map_left({:left, val}, func), do: Either.left(func.(val))
   def map_left({:right, val}, _func), do: Either.right(val)
+
+  @spec map_error(Either.t(), String.t()) :: Either.t()
+  def map_error({:right, val}, _error_msg), do: Either.right(val)
+  def map_error({:left, _error}, error_msg), do: Either.left(error_msg)
 end

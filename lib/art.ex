@@ -132,9 +132,6 @@ defmodule Art do
     |> map_error("Failed to parse description")
   end
 
-  @spec map_error(Either.t(), any()) :: Either.t()
-  defp map_error(either_obj, error), do: map_left(either_obj, fn _ -> error end)
-
   @spec parse_html_line(any()) :: Either.t()
   defp parse_html_line({_, _, [info | _]}), do: Either.right(info)
   defp parse_html_line(_), do: Either.left("Failed to get info in limited-text")

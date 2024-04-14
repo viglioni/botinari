@@ -7,7 +7,10 @@ defmodule TypeClass.Either do
 
   @type t :: {:right, any()} | {:left, any()}
 
-  # generators
+  ##############
+  # generators #
+  ##############
+
   @doc """
   left :: T -> Either T _
   """
@@ -23,7 +26,9 @@ defmodule TypeClass.Either do
   @spec return(any()) :: t()
   def return(val), do: right(val)
 
-  # checkers
+  ############
+  # checkers #
+  ############
 
   @doc """
   is_right :: Either A B -> Boolean
@@ -38,4 +43,16 @@ defmodule TypeClass.Either do
   @spec is_left(t()) :: boolean()
   def is_left({:right, _}), do: false
   def is_left({:left, _}), do: true
+
+  ######################
+  # Converts to either #
+  ######################
+
+  @spec to_either(any()) :: t()
+  def to_either({:ok, value}), do: right(value)
+  def to_either({:error, error}), do: left(error)
+  def to_either(:error), do: left(:error)
+
+  def to_either(object),
+    do: left(%{message: "Couldn't parse object to_either.", object: object})
 end

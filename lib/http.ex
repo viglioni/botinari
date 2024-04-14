@@ -6,6 +6,9 @@ defmodule Http do
   alias TypeClass.Either
   import TypeClass.Monad
 
+  @spec post(String.t(), any(), any()) :: Either.t()
+  def post(url, body, headers), do: url |> HTTPoison.post(body, headers) |> Either.to_either()
+
   @spec get_page_and_parse(String.t()) :: Either.t()
   def get_page_and_parse(url) do
     url
