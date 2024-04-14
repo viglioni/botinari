@@ -16,7 +16,7 @@ defmodule Art do
     field :description, String.t()
     field :kind, String.t()
     field :technique, String.t()
-    field :art_src_url, String.t()
+    field :art_image, String.t()
     field :art_page_url, String.t()
   end
 
@@ -38,15 +38,15 @@ defmodule Art do
     Http.get_page_and_parse(@collection_page)
     |> fmap(&get_art_card/1)
     ~>> (&get_art_page_url/1)
-    |> IO.inspect(label: :url)
   end
 
   @spec parse_art(String.t()) :: Either.t()
   defp parse_art(art_page_url) do
     with {:right, art_page} <- Http.get_page_and_parse(art_page_url),
          {:right, art_src_url} <- get_art_src_url(art_page),
+         {:right, art_image} <- get_image(art_src_url),
          {:right, properties} <- get_properties(art_page) do
-      %{art_src_url: art_src_url, art_page_url: art_page_url}
+      %{art_image: art_image, art_page_url: art_page_url}
       |> Map.merge(properties)
       |> (&struct!(__MODULE__, &1)).()
       |> Either.right()
@@ -145,4 +145,11 @@ defmodule Art do
     do: Either.right(dimensions)
 
   defp parse_dimensions(_), do: Either.left("Failed to get dimension")
+
+  #############
+  # Get image #
+  #############
+
+  @spec get_image(String.t()) :: Either.t()
+  defp get_image(img_url), do: Http.get_body(img_url)
 end
