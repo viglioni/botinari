@@ -26,8 +26,7 @@ defmodule Bsky.Auth do
   @spec get_jwt(any()) :: Either.t()
   defp get_jwt(body) do
     body
-    |> Jason.decode()
-    |> Either.to_either()
+    |> Json.decode()
     |> fmap(fn body -> body["accessJwt"] end)
     |> map_error("Failed to get jwt")
   end
